@@ -39,7 +39,7 @@ locals {
 	variable = "AWS:SourceOwner"
 
 	values = [
-	  "arn:aws:iam::${data.aws_caller_identity.default.account_id}:root",
+	  "${data.aws_caller_identity.default.account_id}",
 	]
       }]
     },
