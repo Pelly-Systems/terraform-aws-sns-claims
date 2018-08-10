@@ -54,16 +54,14 @@ locals {
       }]
     },
     {
-      statement {
-	sid       = "cwe"
-	actions   = ["sns:Publish"]
-	resources = ["${aws_sns_topic.default.arn}"]
+      sid       = "cwe"
+      actions   = ["sns:Publish"]
+      resources = ["${aws_sns_topic.default.arn}"]
 
-	principals = [{
-	  type        = "Service"
-	  identifiers = ["events.amazonaws.com"]
-	}]
-      }
+      principals = [{
+	type        = "Service"
+	identifiers = ["events.amazonaws.com"]
+      }]
     }
   ]
 
