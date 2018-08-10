@@ -16,11 +16,13 @@ locals {
     "rds" = "rds"
     "events" = "events"
     "ses" = "ses"
+    "budgets" = "budgets"
+    "s3" = "s3"
   }
 
   claims = "${distinct(matchkeys(values(local.claims_mapper), keys(local.claims_mapper), var.claims))}"
 
-  all_claims = ["default", "rds", "events", "ses"]
+  all_claims = ["default", "rds", "events", "ses", "budgets", "s3"]
   all_statements = [
     {
       sid = "__default_statement_ID"
@@ -91,6 +93,26 @@ locals {
 	values = [
 	  "${data.aws_caller_identity.default.account_id}",
 	]
+      }]
+    },
+    {
+      sid       = "budgets"
+      actions   = ["sns:Publish"]
+      resources = ["${aws_sns_topic.default.arn}"]
+
+      principals = [{
+	type        = "Service"
+	identifiers = ["budgets.amazonaws.com"]
+      }]
+    },
+    {
+      sid       = "s3"
+      actions   = ["sns:Publish"]
+      resources = ["${aws_sns_topic.default.arn}"]
+
+      principals = [{
+	type        = "Service"
+	identifiers = ["s3.amazonaws.com"]
       }]
     }
   ]
