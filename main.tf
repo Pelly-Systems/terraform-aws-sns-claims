@@ -9,7 +9,7 @@ resource "aws_sns_topic_policy" "default" {
 
 locals {
   claims = "${distinct(concat(list("default"), var.claims))}"
-  all_claims = ["default", "rds", "cloudwatch"]
+  all_claims = ["default", "rds", "events"]
   all_statements = [
     {
       sid = "__default_statement_ID"
