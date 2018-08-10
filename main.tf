@@ -15,11 +15,12 @@ locals {
     "asg" = "default"
     "rds" = "rds"
     "events" = "events"
+    "ses" = "ses"
   }
 
   claims = "${distinct(matchkeys(values(local.claims_mapper), keys(local.claims_mapper), var.claims))}"
 
-  all_claims = ["default", "rds", "events"]
+  all_claims = ["default", "rds", "events", "ses"]
   all_statements = [
     {
       sid = "__default_statement_ID"
@@ -71,6 +72,25 @@ locals {
       principals = [{
 	type        = "Service"
 	identifiers = ["events.amazonaws.com"]
+      }]
+    },
+    {
+      sid       = "ses"
+      actions   = ["sns:Publish"]
+      resources = ["${aws_sns_topic.default.arn}"]
+
+      principals = [{
+	type        = "Service"
+	identifiers = ["ses.amazonaws.com"]
+      }]
+
+      condition = [{
+	test     = "StringEquals"
+	variable = "AWS:SourceOwner"
+
+	values = [
+	  "${data.aws_caller_identity.default.account_id}",
+	]
       }]
     }
   ]
