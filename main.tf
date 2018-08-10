@@ -8,7 +8,17 @@ resource "aws_sns_topic_policy" "default" {
 }
 
 locals {
-  claims = "${distinct(concat(list("default"), var.claims))}"
+  claims_mapper = {
+    "alarms" = "default"
+    "elasticache" = "default"
+    "ebs" = "default"
+    "asg" = "default"
+    "rds" = "rds"
+    "events" = "events"
+  }
+
+  claims = "${distinct(matchkeys(values(local.claims_mapper), keys(local.claims_mapper), var.claims))}"
+
   all_claims = ["default", "rds", "events"]
   all_statements = [
     {
