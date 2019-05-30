@@ -1,4 +1,5 @@
 variable "claims" {
-	type = "list"
-	default = []
+  type    = list(string)
+  default = []
 }
+
